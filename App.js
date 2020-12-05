@@ -1,6 +1,7 @@
+import { AppLoading } from "expo";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -16,9 +17,18 @@ import ToDontList from "./src/components/ToDontList";
 const { heigh, width } = Dimensions.get("window");
 
 export default function App() {
-  const [newTodoItem, setNewTodoItem] = useState("");
+  const [dataIsReady, setDataIsReady] = useState(false);
+  const [newToDontItem, setNewToDontItem] = useState("");
 
-  return (
+  useEffect(() => {
+    setTimeout(() => {
+      setDataIsReady(true);
+    }, 1000);
+  });
+
+  return !dataIsReady ? (
+    <AppLoading />
+  ) : (
     <LinearGradient
       style={styles.container}
       colors={["#0f2027", "#203a43", "#2c5364"]}
@@ -31,15 +41,15 @@ export default function App() {
         <TextInput
           style={styles.input}
           placeholder="What do you what to forget?"
-          value={newTodoItem}
-          onChangeText={(text) => setNewTodoItem(text)}
+          value={newToDontItem}
+          onChangeText={(text) => setNewToDontItem(text)}
           placeholderTextColor={"#999"}
           returnKeyType={"done"}
           autoCorrect={false}
         />
 
         <ScrollView contentContainerStyle={styles.listContainer}>
-          <ToDontList todoItem={"TodoItem"} />
+          <ToDontList toDontItem={"New ToDont"} />
         </ScrollView>
       </View>
     </LinearGradient>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,14 +11,13 @@ import {
 const { height, width } = Dimensions.get("window");
 
 export default function ToDontList(props) {
-  const [todoItem, setTodoItem] = useState("");
+  const [toDontItem, setToDontItem] = useState(props.toDontItem);
   const [isEditing, setIsEditing] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
   const startEditing = () => {
-    const { todoItem } = props;
-    console.log(todoItem);
-    setTodoItem(todoItem);
+    const { toDontItem } = props;
+    setToDontItem(toDontItem);
     setIsEditing(true);
   };
 
@@ -42,7 +41,7 @@ export default function ToDontList(props) {
 
       {isEditing ? (
         <TextInput
-          value={todoItem}
+          value={toDontItem}
           style={[
             styles.text,
             styles.input,
@@ -51,7 +50,7 @@ export default function ToDontList(props) {
           multiline={true}
           returnKeyType={"done"}
           onBlur={() => setIsEditing(false)}
-          onChangeText={(value) => setTodoItem(value)}
+          onChangeText={(value) => setToDontItem(value)}
         />
       ) : (
         <TouchableOpacity onPress={startEditing}>
@@ -61,7 +60,7 @@ export default function ToDontList(props) {
               isCompleted ? styles.strikeText : styles.unstrikeText,
             ]}
           >
-            {todoItem}
+            {toDontItem}
           </Text>
         </TouchableOpacity>
       )}
