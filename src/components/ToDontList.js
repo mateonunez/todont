@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
@@ -9,43 +10,63 @@ import {
 
 const { height, width } = Dimensions.get("window");
 
-class ToDontList extends Component {
-  // const [isEditing, setIsEditing] = useState(false);
-  // const [isCompleted, setIsCompleted] = useState(false);
-  state = {
-    isEditing: false,
-    isCompleted: false,
+export default function ToDontList(props) {
+  const [todoItem, setTodoItem] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
+
+  const startEditing = () => {
+    const { todoItem } = props;
+    console.log(todoItem);
+    setTodoItem(todoItem);
+    setIsEditing(true);
   };
 
-  toggleItem = () => {
-    this.setState((prevState) => ({
-      isCompleted: !prevState.isCompleted,
-    }));
-  };
+  return (
+    <View style={styles.container}>
+      {/* Complete */}
+      <TouchableOpacity
+        onPress={() =>
+          setIsCompleted((previousCompleted) => ({
+            isCompleted: !previousCompleted.isCompleted,
+          }))
+        }
+      >
+        <View
+          style={[
+            styles.circle,
+            isCompleted ? styles.completeCircle : styles.incompleteCircle,
+          ]}
+        />
+      </TouchableOpacity>
 
-  render() {
-    const { isCompleted } = this.state;
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={this.toggleItem}>
-          <View
-            style={[
-              styles.circle,
-              isCompleted ? styles.completeCircle : styles.incompleteCircle,
-            ]}
-          />
-        </TouchableOpacity>
-        <Text
+      {isEditing ? (
+        <TextInput
+          value={todoItem}
           style={[
             styles.text,
+            styles.input,
             isCompleted ? styles.strikeText : styles.unstrikeText,
           ]}
-        >
-          ToDon't List
-        </Text>
-      </View>
-    );
-  }
+          multiline={true}
+          returnKeyType={"done"}
+          onBlur={() => setIsEditing(false)}
+          onChangeText={(value) => setTodoItem(value)}
+        />
+      ) : (
+        <TouchableOpacity onPress={startEditing}>
+          <Text
+            style={[
+              styles.text,
+              isCompleted ? styles.strikeText : styles.unstrikeText,
+            ]}
+          >
+            {todoItem}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -81,6 +102,9 @@ const styles = StyleSheet.create({
   incompleteCircle: {
     borderColor: "#DA4453",
   },
+  input: {
+    marginVertical: 15,
+    width: width / 2,
+    paddingBottom: 5,
+  },
 });
-
-export default ToDontList;

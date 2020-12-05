@@ -39,7 +39,7 @@ export default function App() {
         />
 
         <ScrollView contentContainerStyle={styles.listContainer}>
-          <ToDontList />
+          <ToDontList todoItem={"TodoItem"} />
         </ScrollView>
       </View>
     </LinearGradient>
