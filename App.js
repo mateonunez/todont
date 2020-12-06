@@ -1,6 +1,8 @@
 import { AppLoading } from "expo";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
+import "react-native-get-random-values";
+import { v1 as uuidv1 } from "uuid";
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -12,13 +14,31 @@ import {
   Platform,
 } from "react-native";
 
-import ToDontList from "./src/components/ToDontList";
+import ToDontItem from "./src/components/ToDontItem";
 
-const { heigh, width } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 
 export default function App() {
   const [dataIsReady, setDataIsReady] = useState(false);
-  const [newToDontItem, setNewToDontItem] = useState("");
+  const [newToDont, setNewToDont] = useState("");
+  const [toDonts, setToDonts] = useState([]);
+
+  const addToDont = (toDontItem) => {
+    setToDonts((prevState) => {
+      return [
+        {
+          id: uuidv1(),
+          text: toDontItem,
+          editing: false,
+          completed: false,
+          createdAt: Date.now(),
+        },
+        ...prevState,
+      ];
+    });
+
+    setNewToDont("");
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -41,15 +61,20 @@ export default function App() {
         <TextInput
           style={styles.input}
           placeholder="What do you what to forget?"
-          value={newToDontItem}
-          onChangeText={(text) => setNewToDontItem(text)}
+          value={newToDont}
+          onChangeText={(text) => setNewToDont(text)}
+          onSubmitEditing={() => addToDont(newToDont)}
           placeholderTextColor={"#999"}
           returnKeyType={"done"}
           autoCorrect={false}
         />
 
         <ScrollView contentContainerStyle={styles.listContainer}>
-          <ToDontList toDontItem={"New ToDont"} />
+          {toDonts.length > 0 ? (
+            toDonts.map((toDont) => <ToDontItem key={toDont.id} {...toDont} />)
+          ) : (
+            <Text style={styles.message}>Ops... nothing to forget</Text>
+          )}
         </ScrollView>
       </View>
     </LinearGradient>
@@ -89,6 +114,12 @@ const styles = StyleSheet.create({
     marginTop: 70,
     marginBottom: 30,
     fontWeight: "300",
+  },
+  message: {
+    fontSize: 28,
+    marginTop: 40,
+    alignSelf: "center",
+    fontWeight: "500",
   },
   input: {
     padding: 20,

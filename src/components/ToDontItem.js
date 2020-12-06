@@ -10,57 +10,51 @@ import {
 
 const { height, width } = Dimensions.get("window");
 
-export default function ToDontList(props) {
-  const [toDontItem, setToDontItem] = useState(props.toDontItem);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  const startEditing = () => {
-    const { toDontItem } = props;
-    setToDontItem(toDontItem);
-    setIsEditing(true);
-  };
+export default function ToDontItem(props) {
+  const [text, setText] = useState(props.text);
+  const [editing, setEditing] = useState(props.editing);
+  const [completed, setCompleted] = useState(props.completed);
 
   return (
     <View style={styles.container}>
       {/* Complete */}
       <TouchableOpacity
         onPress={() =>
-          setIsCompleted((previousCompleted) => ({
-            isCompleted: !previousCompleted.isCompleted,
+          setCompleted((prevState) => ({
+            completed: !prevState.completed,
           }))
         }
       >
         <View
           style={[
             styles.circle,
-            isCompleted ? styles.completeCircle : styles.incompleteCircle,
+            completed ? styles.completeCircle : styles.incompleteCircle,
           ]}
         />
       </TouchableOpacity>
 
-      {isEditing ? (
+      {editing ? (
         <TextInput
-          value={toDontItem}
+          value={text}
           style={[
             styles.text,
             styles.input,
-            isCompleted ? styles.strikeText : styles.unstrikeText,
+            completed ? styles.strikeText : styles.unstrikeText,
           ]}
           multiline={true}
           returnKeyType={"done"}
-          onBlur={() => setIsEditing(false)}
-          onChangeText={(value) => setToDontItem(value)}
+          onBlur={() => setEditing(false)}
+          onChangeText={(value) => setText(value)}
         />
       ) : (
-        <TouchableOpacity onPress={startEditing}>
+        <TouchableOpacity onPress={() => setEditing(true)}>
           <Text
             style={[
               styles.text,
-              isCompleted ? styles.strikeText : styles.unstrikeText,
+              completed ? styles.strikeText : styles.unstrikeText,
             ]}
           >
-            {toDontItem}
+            {text}
           </Text>
         </TouchableOpacity>
       )}
