@@ -60,7 +60,7 @@ export default function App() {
       <View style={styles.card}>
         <TextInput
           style={styles.input}
-          placeholder="What do you what to forget?"
+          placeholder="What do you want to forget?"
           value={newToDont}
           onChangeText={(text) => setNewToDont(text)}
           onSubmitEditing={() => addToDont(newToDont)}
